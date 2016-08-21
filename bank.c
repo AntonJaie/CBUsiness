@@ -22,7 +22,7 @@ struct User{ //struct for users with its attributes
 
 struct NodePointer{ //for the linked list of users
 	struct User data;
-	struct Transaction trans;
+	struct Transaction *trans;
 	struct NodePointer *next;
 }
 
@@ -45,7 +45,7 @@ int genRandomAccntNo(struct NodePointer* List){ //generate unique random number
 			while(pCurr != NULL){
 				if(r == pCurr->data.accntNo){
 					isSame = 1;
-					breal
+					break;
 				}
 			}
 		}
@@ -73,7 +73,7 @@ struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[6
 	pointer->data = data;
 	pointer->trans = NULL;
 	pointer->next = NULL;
-
+	pointer->prev = NULL;
 	return pointer;
 }
 
@@ -131,7 +131,7 @@ void printOneNode(struct NodePointer* node){
 	printf("Balance: %.3f", node->data.balance);	
 }
 
-void viewList(struct NodePointer* List){
+void viewList(struct NodePointer* nodes){
 	loadTitle();
 	printf("--- View Customer List ----\n\n")
 	char choice = 'O';
@@ -161,35 +161,169 @@ void viewList(struct NodePointer* List){
 	getchar();
 }
 
+void checkInfo(struct NodePointer* List){
+	loadTitle();
+	printf("--- Check Account Info ---\n\n");
+
+	// print available account numbers
+	struct NodePointer* pCurr;
+	pCurr = List;
+	printf("-- Account Numbers --\n");
+	if(pCurr != NULL){
+		while(pCurr != NULL){
+			printf("%d\n", pCurr->data.accntNo);
+		pCurr = pCurr ->next;
+		}
+	}
+	else{
+		printf("No Accounts To Display.")
+		goto exit_func;
+	}
+	int accntNo = 0;
+	printf("Enter Account Number: ");
+	scanf("%d", &accntNo);
+	if(pCurr != NULL){
+		while(pCurr != NULL){
+			if(pCurr->date.accntNo == accntNo)
+			printOneNode(pCurr);
+		pCurr = pCurr->next;
+		}
+		
+	}
+
+	exit_func:
+	getchar();
+}
+
+struct* NodePointer updateInfo(struct* NodePointer List){
+	printf("--- updateInfo ---\n\n");
+
+	// print available account numbers
+	struct NodePointer* pCurr;
+	pCurr = List;
+	printf("-- Account Numbers --\n");
+	if(pCurr != NULL){
+		while(pCurr != NULL){
+			printf("%d\n", pCurr->data.accntNo);
+		}
+	}
+	else{
+		printf("No Accounts To Display.")
+		goto exit_func;
+	}
+	
+	int accntNo = 0;
+	printf("Enter Account Number: ");
+	scanf("%d", &accntNo);
+	if(pCurr != NULL){
+		while(pCurr != NULL){
+			if(pCurr->data.accntNo == accntNo)
+			printOneNode(pCurr);
+		pCurr = pCurr->next;
+		}
+		
+	}
+
+
+	char name[60] = {'\0'}, address[60] = {'\0'};
+	int age = 0, accntType = 0;
+
+	printf("Account No: %d\n",accntNo);
+	printf("Name: ");
+	scanf("%s", name);
+	fflush(stdin);
+	printf("Address: ");
+	scanf("%s", address);
+	fflush(stdin);
+	printf("Age: ");
+	scanf("%d", &age);
+	printf("Account Type (1 - S/C, 2 - Fixed): ");
+	scanf("%d, accntType");
+	pCurr->data.name = name;
+	pCurr->data.address = address;
+	pCurr->data.age = age;
+	pCurr->data.accntType = accntType;
+
+	printf("Account Updated! ");
+	return List;
+}
+
+struct* NodePointer removeAccount(struct* NodePointer List){
+	printf("--- Remove Account ---\n\n");
+
+	// print available account numbers
+	struct NodePointer* pCurr, *temp;
+	temp = List;
+	pCurr = List;
+	printf("-- Account Numbers --\n");
+	if(pCurr != NULL){
+		while(pCurr != NULL){
+			printf("%d\n", pCurr->data.accntNo);
+			pCurr = pCurr->next;
+		}
+	}
+	else{
+		printf("No Accounts To Display.")
+		goto exit_func;
+	}
+	
+	int accntNo = 0;
+	printf("Enter Account Number: ");
+	scanf("%d", &accntNo);
+	if(pCurr != NULL && temp->data.accntNo == accntNo){
+		pCurr = temp->next;
+		free(temp);
+		List = pCurr;
+		return List;
+	}
+
+		while(pCurr != NULL){
+			if(pCurr->data.accntNo == accntNo)
+				break;
+			pCurr = pCurr->next;
+		}
+		if(temp == NULL)
+			return List;
+
+		prev->next = temp->next;
+		free(temp);
+		printf("Account Deleted.");
+		List = pCurr;
+		return List;
+}
+
 void loadAdminHome(){
 	loadTitle();//load title screen
 	
-	int input;
-	struct NodePointer* pStart = NULL;
-	printf("[1] Create an Account\n");
-	printf("[2]	Update Info\n");
-	printf("[3]	Check Info\n");
-	printf("[4]	View and Manage Transactions\n");
-	printf("[5]	Remove An Account\n");
-	printf("[6]	View Customer's List\n");
-	printf("[7]	Exit\n\n\n");
-
+	int input = 0;
 	while(input != 7){
+		loadTitle();//load title screen
+		struct NodePointer* pStart = NULL;
+		printf("[1] Create an Account\n");
+		printf("[2]	Update Info\n");
+		printf("[3]	Check Info\n");
+		printf("[4]	View and Manage Transactions\n");
+		printf("[5]	Remove An Account\n");
+		printf("[6]	View Customer's List\n");
+		printf("[7]	Exit\n\n\n");
+
+		printf("Option: ");
+		scanf("%d", &input);
 		switch(input){
 			case 1: //create accnt
 				pStart = createAccount(pStart);
 				break;
 			case 2: //update info
-				//pStart = updateInfo(pStart);
+				pStart = updateInfo(pStart);
 				break;
 			case 3: //check info
-				//checkInfo(pStart);
+				checkInfo(pStart);
 				break;
 			case 4: //View and Manage Trans
 				//pStart = viewAndManageTrans(pStart);
 				break;
 			case 5: //remove account
-				//pStart = removeAccount(pStart);
+				pStart = removeAccount(pStart);
 				break;
 			case 6: // View Customer List
 				viewList(pStart);
@@ -201,8 +335,6 @@ void loadAdminHome(){
 		}
 	}
 }
-
-
 
 int main(){
 	char pass[10],password[10]="hazelchung";
