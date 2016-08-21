@@ -9,7 +9,7 @@ struct Transaction{
 	int srofTransID; //sender or recipient of transaction
 	char dateTrans[11];
 	float amount;
-}
+};
 
 struct User{ //struct for users with its attributes
 	int accntNo;	
@@ -24,7 +24,7 @@ struct NodePointer{ //for the linked list of users
 	struct User data;
 	struct Transaction *trans;
 	struct NodePointer *next;
-}
+};
 
 void loadTitle(){
 	system("cls");
@@ -34,11 +34,11 @@ void loadTitle(){
 }
 
 int genRandomAccntNo(struct NodePointer* List){ //generate unique random number
-	strct NodePointer* pCurr;
+	struct NodePointer* pCurr;
 
 	srand(time(NULL));
 	int r = 0, isSame = 1;
-	do{	
+	do {
 		r = rand()%9999;
 		pCurr = List;
 		if(pCurr != NULL){
@@ -63,7 +63,7 @@ struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[6
 	strcpy(u.name,name);
 	u.age = age;
 	strcpy(u.address,address);
-	u.acctType = acctType;
+	u.accType = accntType;
 	u.balance = balance;
 
 	trans = NULL;
@@ -73,9 +73,8 @@ struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[6
 	pointer->data = data;
 	pointer->trans = NULL;
 	pointer->next = NULL;
-	pointer->prev = NULL;
 	return pointer;
-}
+};
 
 struct NodePointer* createAccount(struct NodePointer* List){
 
@@ -117,13 +116,14 @@ struct NodePointer* createAccount(struct NodePointer* List){
 		pTemp->next = pNew;
 	}
 	return List;
-}
+};
+
 void printOneNode(struct NodePointer* node){
 	printf("Account Number: %d\n", node->data.accntNo);
 	printf("Name: %s\n", node->data.name);
 	printf("Age: %d\n", node->data.age);
-	printf("Address: %s\n", node->data.Address);
-	if(node->data.accntType = 1)
+	printf("Address: %s\n", node->data.address);
+	if(node->data.accType = 1)
 		printf("Account Type: Savings/Current\n");
 	else
 		printf("Account Type: Fixed\n");
@@ -133,7 +133,7 @@ void printOneNode(struct NodePointer* node){
 
 void viewList(struct NodePointer* nodes){
 	loadTitle();
-	printf("--- View Customer List ----\n\n")
+	printf("--- View Customer List ----\n\n");
 	char choice = 'O';
 	struct NodePointer* pCurr;
 	pCurr = nodes;
@@ -246,7 +246,7 @@ struct* NodePointer updateInfo(struct* NodePointer List){
 
 	printf("Account Updated! ");
 	return List;
-}
+};
 
 struct* NodePointer removeAccount(struct* NodePointer List){
 	printf("--- Remove Account ---\n\n");
@@ -290,7 +290,7 @@ struct* NodePointer removeAccount(struct* NodePointer List){
 		printf("Account Deleted.");
 		List = pCurr;
 		return List;
-}
+};
 
 void loadAdminHome(){
 	loadTitle();//load title screen
