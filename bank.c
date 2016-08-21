@@ -34,31 +34,36 @@ void loadTitle(){
 }
 
 int genRandomAccntNo(struct NodePointer* List){ //generate unique random number
-	struct NodePointer* pCurr;
+	struct NodePointer* pCurr = List;
 
 	srand(time(NULL));
 	int r = 0, isSame = 1;
-	do {
-		r = rand()%9999;
-		pCurr = List;
-		if(pCurr != NULL){
-			while(pCurr != NULL){
-				if(r == pCurr->data.accntNo){
-					isSame = 1;
-					break;
+
+	if(pCurr != NULL){
+		do {
+			r = rand()%9999;
+			pCurr = List;
+			if(pCurr != NULL){
+				while(pCurr != NULL){
+					if(r == pCurr->data.accntNo){
+						isSame = 1;
+						break;
+					}
+					pCurr = pCurr->next;
 				}
 			}
-		}
-	}while(isSame = 1);
+		}while(isSame != 1);
+	}
+	else
+		r = rand()%9999;
+	
 
 	return r;
 }
 
 struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[60],int accntType,float balance){
 	struct User u;
-	struct Transaction *trans;
 	struct NodePointer* pointer;
-
 	u.accntNo = accntNo;
 	strcpy(u.name,name);
 	u.age = age;
@@ -66,15 +71,15 @@ struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[6
 	u.accType = accntType;
 	u.balance = balance;
 
-	trans = NULL;
 	pointer = malloc(sizeof(struct NodePointer));
 	if(pointer==NULL)
 			return NULL;
 	pointer->data = u;
 	pointer->trans = NULL;
 	pointer->next = NULL;
+
 	return pointer;
-};
+}
 
 struct NodePointer* createAccount(struct NodePointer* List){
 
@@ -100,9 +105,9 @@ struct NodePointer* createAccount(struct NodePointer* List){
 	printf("Age: ");
 	scanf("%d", &age);
 	printf("Account Type (1 - S/C, 2 - Fixed): ");
-	scanf("%d, accntType");
+	scanf("%d, &accntType");
 	printf("Starting Balance: ");
-	scanf("%f", balance);
+	scanf("%f", &balance);
 
 	pNew = makeUser(accntNo, name, age, address,accntType,balance);
 	pTemp = List;
@@ -114,9 +119,10 @@ struct NodePointer* createAccount(struct NodePointer* List){
 			pTemp-pTemp->next;
 		}
 		pTemp->next = pNew;
+		List = pTemp;
 	}
 	return List;
-};
+}
 
 void printOneNode(struct NodePointer* node){
 	printf("Account Number: %d\n", node->data.accntNo);
@@ -158,12 +164,13 @@ void viewList(struct NodePointer* nodes){
 	}
 	else
 		printf("No data available.");
-	getchar();
+
+	getch();
 }
 
 void checkInfo(struct NodePointer* List){
 	loadTitle();
-	printf("--- Check Account Info ---\n\n");
+	printf("--- Check Account Info ---\n");
 
 	// print available account numbers
 	struct NodePointer* pCurr;
@@ -180,8 +187,9 @@ void checkInfo(struct NodePointer* List){
 		goto exit_func;
 	}
 	int accntNo = 0;
-	printf("Enter Account Number: ");
+	printf("\nEnter Account Number: ");
 	scanf("%d", &accntNo);
+	pCurr = List;
 	if(pCurr != NULL){
 		while(pCurr != NULL){
 			if(pCurr->data.accntNo == accntNo)
@@ -192,7 +200,7 @@ void checkInfo(struct NodePointer* List){
 	}
 
 	exit_func:
-	getchar();
+	getch();
 }
 
 struct NodePointer* updateInfo(struct NodePointer* List){
@@ -211,7 +219,7 @@ struct NodePointer* updateInfo(struct NodePointer* List){
 		printf("No Accounts To Display.");
 		goto exit_func;
 	}
-	
+	pCurr = List;
 	int accntNo = 0;
 	printf("Enter Account Number: ");
 	scanf("%d", &accntNo);
@@ -248,7 +256,7 @@ struct NodePointer* updateInfo(struct NodePointer* List){
 
 	exit_func:
 	return List;
-};
+}
 
 struct NodePointer* removeAccount(struct NodePointer* List){
 	printf("--- Remove Account ---\n\n");
@@ -268,7 +276,7 @@ struct NodePointer* removeAccount(struct NodePointer* List){
 		printf("No Accounts To Display.");
 		goto exit_func;
 	}
-	
+	pCurr = List;
 	int accntNo = 0;
 	printf("Enter Account Number: ");
 	scanf("%d", &accntNo);
@@ -295,16 +303,14 @@ struct NodePointer* removeAccount(struct NodePointer* List){
 
 		exit_func:
 		return List;
-};
+}
 
 void loadAdminHome(){
-	loadTitle();//load title screen
-	
+	struct NodePointer* pStart = NULL;
 	int input = 0;
 	while(input != 7){
 		loadTitle();//load title screen
-		struct NodePointer* pStart = NULL;
-		printf("[1] Create an Account\n");
+		printf("[1] \tCreate an Account\n");
 		printf("[2]	Update Info\n");
 		printf("[3]	Check Info\n");
 		printf("[4]	View and Manage Transactions\n");
@@ -342,27 +348,28 @@ void loadAdminHome(){
 }
 
 int main(){
-	char pass[10],password[10]="hazelchung";
+	char pass[10] = {'\0'},password[11]="hazelchung";
 	int match = 0;
 	loadTitle();
 
-	while(match != 1)
-	printf("Enter the password to login ('Q' to quit): ");
-	scanf("%s",pass[10]);
-
-	if(strcmp(pass,"Q")){
-		goto exit_tag;
-	}
-	else if(strcmp(pass,password)){
-		loadAdminHome();
-	}
-	else{
-		printf("Access Denied! Wrong Password.\n");
-	}
-
+	
+	do{
+		printf("Enter the password to login ('quit' to exit): ");
+		scanf("%s",pass);
+		fflush(stdin);
+		if(strcmp(pass,"Q") == 0){
+			exit(1);
+		}
+		else if(strcmp(pass,password) == 0){
+			loadAdminHome();
+			match = 1;
+		}
+		else{
+			printf("Access Denied! Wrong Password.\n");
+		}
+	}while(match != 1);
 	exit_tag:
 	getch();
-	fflush(stdin);
 	return 0;
 }
 
