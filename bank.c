@@ -160,7 +160,8 @@ void viewList(struct NodePointer* List){
 		printf("No data available.");
 	getchar();
 }
-loadAdminHome(){
+
+void loadAdminHome(){
 	loadTitle();//load title screen
 	
 	int input;
