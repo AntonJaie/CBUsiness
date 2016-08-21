@@ -70,7 +70,7 @@ struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[6
 	pointer = malloc(sizeof(struct NodePointer));
 	if(pointer==NULL)
 			return NULL;
-	pointer->data = data;
+	pointer->data = u;
 	pointer->trans = NULL;
 	pointer->next = NULL;
 	return pointer;
@@ -176,7 +176,7 @@ void checkInfo(struct NodePointer* List){
 		}
 	}
 	else{
-		printf("No Accounts To Display.")
+		printf("No Accounts To Display.");
 		goto exit_func;
 	}
 	int accntNo = 0;
@@ -184,7 +184,7 @@ void checkInfo(struct NodePointer* List){
 	scanf("%d", &accntNo);
 	if(pCurr != NULL){
 		while(pCurr != NULL){
-			if(pCurr->date.accntNo == accntNo)
+			if(pCurr->data.accntNo == accntNo)
 			printOneNode(pCurr);
 		pCurr = pCurr->next;
 		}
@@ -352,7 +352,7 @@ int main(){
 		loadAdminHome();
 	}
 	else{
-		printf("Access Denied! Wrong Password.\n")
+		printf("Access Denied! Wrong Password.\n");
 	}
 
 	exit_tag:
