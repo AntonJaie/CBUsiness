@@ -56,7 +56,7 @@ int genRandomAccntNo(struct NodePointer* List){ //generate unique random number
 
 struct NodePointer* makeUser(int accntNo, char name[60], int age, char address[60],int accntType,float balance){
 	struct User u;
-	struct Transaction trans;
+	struct Transaction *trans;
 	struct NodePointer* pointer;
 
 	u.accntNo = accntNo;
@@ -195,7 +195,7 @@ void checkInfo(struct NodePointer* List){
 	getchar();
 }
 
-struct* NodePointer updateInfo(struct* NodePointer List){
+struct NodePointer* updateInfo(struct NodePointer* List){
 	printf("--- updateInfo ---\n\n");
 
 	// print available account numbers
@@ -208,7 +208,7 @@ struct* NodePointer updateInfo(struct* NodePointer List){
 		}
 	}
 	else{
-		printf("No Accounts To Display.")
+		printf("No Accounts To Display.");
 		goto exit_func;
 	}
 	
@@ -239,20 +239,22 @@ struct* NodePointer updateInfo(struct* NodePointer List){
 	scanf("%d", &age);
 	printf("Account Type (1 - S/C, 2 - Fixed): ");
 	scanf("%d, accntType");
-	pCurr->data.name = name;
-	pCurr->data.address = address;
+	strcpy(pCurr->data.name,name);
+	strcpy(pCurr->data.address,address);
 	pCurr->data.age = age;
-	pCurr->data.accntType = accntType;
+	pCurr->data.accType = accntType;
 
 	printf("Account Updated! ");
+
+	exit_func:
 	return List;
 };
 
-struct* NodePointer removeAccount(struct* NodePointer List){
+struct NodePointer* removeAccount(struct NodePointer* List){
 	printf("--- Remove Account ---\n\n");
 
 	// print available account numbers
-	struct NodePointer* pCurr, *temp;
+	struct NodePointer* pCurr, *temp, *prev;
 	temp = List;
 	pCurr = List;
 	printf("-- Account Numbers --\n");
@@ -263,7 +265,7 @@ struct* NodePointer removeAccount(struct* NodePointer List){
 		}
 	}
 	else{
-		printf("No Accounts To Display.")
+		printf("No Accounts To Display.");
 		goto exit_func;
 	}
 	
@@ -280,15 +282,18 @@ struct* NodePointer removeAccount(struct* NodePointer List){
 		while(pCurr != NULL){
 			if(pCurr->data.accntNo == accntNo)
 				break;
-			pCurr = pCurr->next;
+			prev = pCurr;
+			temp = pCurr->next;
 		}
-		if(temp == NULL)
+		if(pCurr == NULL)
 			return List;
 
 		prev->next = temp->next;
 		free(temp);
 		printf("Account Deleted.");
 		List = pCurr;
+
+		exit_func:
 		return List;
 };
 
