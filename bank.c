@@ -31,7 +31,7 @@ void loadTitle(){
 	printf("***************************\n\n\n");
 }
 
-loadAdminHome(){
+void loadAdminHome(){
 	loadTitle();//load title screen
 	
 	printf("[1] Create an Account\n");
@@ -41,7 +41,13 @@ loadAdminHome(){
 	printf("[5]	Remove An Account\n");
 	printf("[6]	View Customer's List\n");
 	printf("[7]	Exit\n\n\n");
-}
+}
+
+void loadUserHome(){
+    loadTitle(); //load title screen 
+    printf("[1] Withdraw\n");
+    printf("[2] Deposit\n");
+}
 
 void userLogin(){
 	int accountNo = -99, password = -99;
